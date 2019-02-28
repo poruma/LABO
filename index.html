@@ -1,0 +1,75 @@
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8" />
+  <title>PaperTest</title>
+
+  <link rel="stylesheet" href="assets/css/style.css">
+  <!--  jsプラグイン・ライブラリ-->
+  <script src="assets/js/lib/jquery-3.3.1.min.js"></script>
+  <script type="text/javascript" src="assets/js/lib/paperjs-v0.12.0/dist/paper-full.js"></script>
+
+  <!--
+  <script src="assets/js/libraries/pixi.js"></script>
+  <script src="assets/js/libraries/html2canvas.js"></script>
+  <script src="assets/js/libraries/jquery.kerning.js"></script>
+  <script src="assets/js/libraries/FLAutoKerning.js"></script>
+  <script src="assets/js/libraries/html2.js"></script>
+  <script src="assets/js/libraries/kerning.js"></script>
+-->
+
+  <!--  test用js-->
+  <script src="assets/js/test.js"></script>
+
+  <!--  Font-->
+  <!-- <link href="https://fonts.googleapis.com/css?family=Kosugi|Kosugi+Maru|M+PLUS+Rounded+1c|Noto+Sans+JP|Noto+Serif+JP|Noto+Serif+TC|Sawarabi+Gothic" rel="stylesheet"> -->
+  <script type="text/paperscript" canvas="canvas">
+    // Adapted from the following Processing example:
+      // http://processing.org/learning/topics/follow3.html
+
+      // The amount of points in the path:
+      var points = 25;
+
+      // The distance between the points:
+      var length = 35;
+
+      var path = new Path({
+          strokeColor: '#E4141B',
+          strokeWidth: 20,
+          strokeCap: 'round'
+      });
+
+      var start = view.center / [10, 1];
+      for (var i = 0; i < points; i++)
+          path.add(start + new Point(i * length, 0));
+
+      function onMouseMove(event) {
+          path.firstSegment.point = event.point;
+          for (var i = 0; i < points - 1; i++) {
+              var segment = path.segments[i];
+              var nextSegment = segment.next;
+              var vector = segment.point - nextSegment.point;
+              vector.length = length;
+              nextSegment.point = segment.point - vector;
+          }
+          path.smooth({ type: 'continuous' });
+      }
+
+      function onMouseDown(event) {
+          path.fullySelected = true;
+          path.strokeColor = '#e08285';
+      }
+
+      function onMouseUp(event) {
+          path.fullySelected = false;
+          path.strokeColor = '#e4141b';
+      }
+  </script>
+</head>
+
+<body>
+  <canvas id="canvas" resize></canvas>
+</body>
+
+
+</html>
